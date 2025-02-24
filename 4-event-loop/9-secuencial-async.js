@@ -1,6 +1,6 @@
 console.log("Inicio");
 
-// Función para obtener un usuario de una API
+// Obtenemos usuario de la API
 function getUser(userId) {
   return fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
     .then(response => {
@@ -9,7 +9,7 @@ function getUser(userId) {
     });
 }
 
-// Función para obtener los posts de un usuario
+// Obtenemos los posts del usuario
 function getPosts(userId) {
   return fetch(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`)
     .then(response => {
@@ -18,7 +18,7 @@ function getPosts(userId) {
     });
 }
 
-// Función para obtener los comentarios del post
+// Obtenemos los comentarios de cada post
 function getComments(postId) {
   return fetch(`https://jsonplaceholder.typicode.com/comments?postId=${postId}`)
     .then(response => {
@@ -34,19 +34,19 @@ async function fetchOrderDetails() {
     const commentsPromises = posts.map(post => getComments(post.id));
     const commentsArray = await Promise.all(commentsPromises);
 
-    // Filtrar comentarios que contienen la palabra "qui"
-    const filteredComments = commentsArray.flat().filter(comment => comment.body.includes("qui"));
+    // Filtramos comentarios con fragmento "et"
+    const filteredComments = commentsArray.flat().filter(comment => comment.body.includes("et"));
 
-    // Crear un array de objetos con postId y número de comentarios que contienen la palabra específica
+    // Array objetos con Id y número de comentarios que contienen el fragmento "et"
     const commentsCount = commentsArray.map((comments, index) => ({
       postId: posts[index].id,
-      count: comments.filter(comment => comment.body.includes("eum")).length
+      count: comments.filter(comment => comment.body.includes("et")).length
     }));
 
-    // Utilizar reduce para contar el total de comentarios que contienen la palabra específica
+    // Utilizamos reduce para recuento total de comentarios que contengan le fragmento.
     const totalFilteredComments = commentsCount.reduce((total, post) => total + post.count, 0);
 
-    console.log('Comentarios filtrados que contienen la palbra o fragmento "eum":', filteredComments);
+    console.log('Comentarios filtrados que contienen la palbra o fragmento "et":', filteredComments);
     console.log("Conteo de comentarios por post con la palabra específica:", commentsCount);
     console.log("Total de comentarios filtrados:", totalFilteredComments);
     console.log("Fin");
@@ -54,6 +54,7 @@ async function fetchOrderDetails() {
     console.error("Error:", error);
   }
 }
+
 
 
 
