@@ -31,18 +31,30 @@ async function fetchOrderDetails() {
   try {
     const user = await getUser(1);
     const posts = await getPosts(user.id);
-    const comments = await getComments(posts[0].id);
+    const commentsPromises = posts.map(post => getComments(post.id));
+    const commentsArray = await Promise.all(commentsPromises);
 
-    console.log("Comentarios del primer post:", comments);
+    // Filtrar comentarios que contienen la palabra "qui"
+    const filteredComments = commentsArray.flat().filter(comment => comment.body.includes("qui"));
+
+    // Crear un array de objetos con postId y número de comentarios que contienen la palabra específica
+    const commentsCount = commentsArray.map((comments, index) => ({
+      postId: posts[index].id,
+      count: comments.filter(comment => comment.body.includes("eum")).length
+    }));
+
+    // Utilizar reduce para contar el total de comentarios que contienen la palabra específica
+    const totalFilteredComments = commentsCount.reduce((total, post) => total + post.count, 0);
+
+    console.log('Comentarios filtrados que contienen la palbra o fragmento "eum":', filteredComments);
+    console.log("Conteo de comentarios por post con la palabra específica:", commentsCount);
+    console.log("Total de comentarios filtrados:", totalFilteredComments);
     console.log("Fin");
   } catch (error) {
     console.error("Error:", error);
   }
 }
 
-console.log("Inicio");
+
 
 fetchOrderDetails();
-
-
-
